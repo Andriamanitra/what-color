@@ -21,8 +21,13 @@ Russian word "синий"?
 ### Requirements
 
 You will need [racket](https://racket-lang.org/).
-After installing racket you can install the required packages:
-* `raco pkg install` [`forms-lib`](https://docs.racket-lang.org/forms/index.html)
+After installing racket you can install the required packages
+([`forms-lib`](https://docs.racket-lang.org/forms/index.html),
+ [`db-lib`](https://docs.racket-lang.org/db/index.html))
+with raco:
+```
+raco pkg install --auto
+```
 
 ### Initialize the database
 
@@ -41,4 +46,12 @@ The application will be listening on `http://localhost:8000/whatcolor` by defaul
 
 ```
 sqlite3 -csv colornames.db 'SELECT * FROM colornames' > colornames.csv
+```
+
+### Or alternatively, using Docker:
+
+```
+docker build --tag whatcolor .
+sqlite3 colornames.db < initdb.sql
+docker run --rm -it -v $PWD/colornames.db:/app/colornames.db -p 8000:8000 whatcolor:latest
 ```
