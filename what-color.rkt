@@ -1,9 +1,9 @@
 #lang racket
 
-(require web-server/servlet
-         web-server/servlet-env
-         db
-         forms)
+(require db
+         forms
+         web-server/servlet
+         web-server/servlet-env)
 
 (define dbc
   (sqlite3-connect #:database "colornames.db"))
@@ -34,13 +34,13 @@
 (define (format-reason reason)
   (match reason
     [(cons field explanation) (format "* ~a: ~a" field explanation)]
-    [else (format "* ~a" reason)]))
+    [_ (format "* ~a" reason)]))
 
 (define (request-handler req)
   (match (request-method req)
     [#"GET" main-page]
     [#"POST" (post-color req)]
-    [else (respond-with-error 405 "expected GET or POST")]))
+    [_ (respond-with-error 405 "expected GET or POST")]))
 
 (define render-color-form
   `(form
@@ -77,11 +77,11 @@
     [(list 'failed reasons _)
      (respond-with-error 400 (string-join (map format-reason reasons) "\n"))]
 
-    [else
+    [_
      (displayln (request-method req))
      (respond-with-error 400 "expected a POST request with form data")]))
 
-(define (not-found-responder req)
+(define (not-found-responder _req)
   (respond-with-error 404 "404 not found"))
 
 (displayln "listening on http://localhost:8000/whatcolor (Ctrl+C to stop)")
