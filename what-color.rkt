@@ -48,9 +48,14 @@
     (input ((id "red") (name "r") (type "number") (value "5") (hidden "")))
     (input ((id "green") (name "g") (type "number") (value "5") (hidden "")))
     (input ((id "blue") (name "b") (type "number") (value "5") (hidden "")))
-    (button ((type "button") (onclick "next()")) "skip")
-    (input ((id "name") (name "name") (type "text") (minlength "2") (maxlength "34") (required "")))
-    (button ((type "submit")) "submit")))
+    (input ((id "name")
+            (name "name")
+            (type "text")
+            (minlength "2") (maxlength "34")
+            (required "")
+            (placeholder "Type a color name")))
+    (button ((type "submit")) "submit")
+    (button ((type "button") (onclick "next()")) "skip")))
     
 
 (define main-page
@@ -65,7 +70,15 @@
      (body
       (h1 "What's" (span ((class "colored title-span")) "this") "color?!")
       (div ((id "color")))
-      (unquote render-color-form)))))
+      (unquote render-color-form)
+      (div ((class "instructions"))
+        (h2 "Instructions")
+        (ul
+          (li "You should not use search engines or other external resources to make your decision.")
+          (li "The color names can be in any language – prefer using the one you are the most fluent in!")
+          (li "There are no wrong answers. Use the same word as you would in a regular conversation!")
+          (li "Consider disabling dark mode browser extensions and other tools that could affect the colors.")
+          (li "Creativity is allowed but not required.")))))))
 
 (define (post-color req)
   (match (form-run color-form req)
